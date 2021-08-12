@@ -1,22 +1,23 @@
 package entidades;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LineaDeTransporte {
 	
 	private Integer id;
 	private String nombre;
 	private ColorLinea color;
 	private EstadoLineaDeTransporte estado;
-	private List<Trayecto> recorrido;
 	
 	public LineaDeTransporte(Integer id, String nombre, ColorLinea color, EstadoLineaDeTransporte estado) {
 		this.id = id;
 		this.nombre = nombre;
 		this.color = color;
 		this.estado = estado;
-		this.recorrido = new ArrayList<Trayecto>();
+	}
+
+	public LineaDeTransporte(String nombre, entidades.ColorLinea color, EstadoLineaDeTransporte estado) {
+		this.nombre = nombre;
+		this.color = color;
+		this.estado = estado;
 	}
 
 	public String getNombre() {
@@ -43,15 +44,18 @@ public class LineaDeTransporte {
 		this.estado = estado;
 	}
 
-	public List<Trayecto> getRecorrido() {
-		return recorrido;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setRecorrido(List<Trayecto> recorrido) {
-		this.recorrido = recorrido;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	
+	public void setColor(ColorLinea color) {
+		this.color = color;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -60,7 +64,6 @@ public class LineaDeTransporte {
 		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
-		result = prime * result + ((recorrido == null) ? 0 : recorrido.hashCode());
 		return result;
 	}
 
@@ -73,10 +76,7 @@ public class LineaDeTransporte {
 		if (getClass() != obj.getClass())
 			return false;
 		LineaDeTransporte other = (LineaDeTransporte) obj;
-		if (color == null) {
-			if (other.color != null)
-				return false;
-		} else if (!color.equals(other.color))
+		if (color != other.color)
 			return false;
 		if (estado != other.estado)
 			return false;
@@ -90,14 +90,17 @@ public class LineaDeTransporte {
 				return false;
 		} else if (!nombre.equals(other.nombre))
 			return false;
-		if (recorrido == null) {
-			if (other.recorrido != null)
-				return false;
-		} else if (!recorrido.equals(other.recorrido))
-			return false;
 		return true;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		//return "LineaDeTransporte [id=" + id + ", nombre=" + nombre + ", color=" + color + ", estado=" + estado + "]";
+		return nombre + " " + color;
+	}
+	
+	public Boolean activa() {
+		return this.getEstado().equals(EstadoLineaDeTransporte.ACTIVA);
+	}
+	
 }

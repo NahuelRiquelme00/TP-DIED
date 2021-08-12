@@ -23,7 +23,7 @@ public class PanelGestionarBoletos extends JPanel {
 		JButton btnComprar = new JButton("Comprar boleto");
 		btnComprar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.cambiarPanel(VentanaPrincipal.PANE_COMPRAR_BOLETO);
+				frame.cambiarPanel(VentanaPrincipal.PANE_VER_COMBINACIONES);
 			}
 		});
 		btnComprar.setFont(new Font("Tahoma", Font.PLAIN, 20));

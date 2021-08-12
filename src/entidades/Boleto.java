@@ -1,40 +1,37 @@
 package entidades;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class Boleto {
 	private Integer id;
 	private String correoCliente;
 	private String nombreCliente;
 	private LocalDate fechaVenta;
-	private Double costo;
 	private String origen;
 	private String destino;
-	private List<Trayecto> camino;
+	private String camino;
+	private Double costo;
 	
-	public Boleto(Integer id, String correoCliente, String nombreCliente, LocalDate fechaVenta, Double costo,
-			String origen, String destino, List<Trayecto> camino) {
-		super();
+	public Boleto(Integer id, String correoCliente, String nombreCliente, LocalDate fechaVenta, String origen,
+			String destino, String camino, Double costo) {
 		this.id = id;
 		this.correoCliente = correoCliente;
 		this.nombreCliente = nombreCliente;
 		this.fechaVenta = fechaVenta;
-		this.costo = costo;
 		this.origen = origen;
 		this.destino = destino;
 		this.camino = camino;
+		this.costo = costo;
 	}
-	public Boleto(String correoCliente, String nombreCliente, LocalDate fechaVenta, Double costo, String origen,
-			String destino, List<Trayecto> camino) {
-		super();
+	public Boleto(String correoCliente, String nombreCliente, LocalDate fechaVenta, String origen, String destino,
+			String camino, Double costo) {
 		this.correoCliente = correoCliente;
 		this.nombreCliente = nombreCliente;
 		this.fechaVenta = fechaVenta;
-		this.costo = costo;
 		this.origen = origen;
 		this.destino = destino;
 		this.camino = camino;
+		this.costo = costo;
 	}
 	public String getCorreoCliente() {
 		return correoCliente;
@@ -78,12 +75,14 @@ public class Boleto {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public List<Trayecto> getCamino() {
+	public String getCamino() {
 		return camino;
 	}
-	public void setCamino(List<Trayecto> camino) {
+
+	public void setCamino(String camino) {
 		this.camino = camino;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

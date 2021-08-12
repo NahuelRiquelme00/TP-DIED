@@ -1,39 +1,38 @@
-package interfaces.estacion;
+package interfaces.lineas;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import dao.EstacionDAO;
-
-import entidades.Estacion;
+import dao.LineaDeTransporteDAO;
+import entidades.LineaDeTransporte;
 import excepciones.DAOException;
 
-public class EstacionTableModel extends AbstractTableModel{
-	
-	private static final long serialVersionUID = -1442430762746446445L;
+public class LineaTableModel extends AbstractTableModel{
 
-	private EstacionDAO estaciones;	
-	private List<Estacion> datos = new ArrayList<>();
+	private static final long serialVersionUID = -1155934481376911107L;
 	
-	public EstacionTableModel(EstacionDAO manager) {
-		this.estaciones = manager;
+	private LineaDeTransporteDAO lineas;
+	private List<LineaDeTransporte> datos = new ArrayList<>();
+
+	public LineaTableModel(LineaDeTransporteDAO manager) {
+		this.lineas = manager;
 	}
-	
+
 	public void updateModel()  {
 		try {
-			datos = estaciones.obtenerTodasLasEntidades();
+			datos = lineas.obtenerTodasLasEntidades();
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	public List<Estacion> getDatos() {
+	
+	public List<LineaDeTransporte> getDatos() {
 		return datos;
 	}
 
-	public void setDatos(List<Estacion> datos) {
+	public void setDatos(List<LineaDeTransporte> datos) {
 		this.datos = datos;
 	}
 
@@ -43,13 +42,12 @@ public class EstacionTableModel extends AbstractTableModel{
 		switch (column) {
 		case 0: return "ID";
 		case 1: return "Nombre";
-		case 2: return "Apertura";
-		case 3: return "Cierre";
-		case 4: return "Estado";			
+		case 2: return "Color";
+		case 3: return "Estado";			
 		default: return "Error al cargar nombres";
 		}
 	}
-
+	
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub
@@ -59,19 +57,18 @@ public class EstacionTableModel extends AbstractTableModel{
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 4;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		Estacion preguntado = datos.get(rowIndex);
+		LineaDeTransporte preguntado = datos.get(rowIndex);
 		switch (columnIndex) {
 		case 0: return preguntado.getId();
 		case 1: return preguntado.getNombre();
-		case 2: return preguntado.getHorarioApertura().toString();
-		case 3: return preguntado.getHorarioCierre().toString();
-		case 4: return preguntado.getEstado().toString();			
+		case 2: return preguntado.getColor().toString();
+		case 3: return preguntado.getEstado().toString();			
 		default: return "Error al cargar los datos";
 		}
 	}

@@ -1,8 +1,6 @@
 package entidades;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Estacion {
 	
@@ -11,25 +9,20 @@ public class Estacion {
 	private LocalTime horarioApertura;
 	private LocalTime horarioCierre;
 	private EstadoEstacion estado;
-	private List<Mantenimiento> mantenimientos;
 	
-	public Estacion(Integer id, String nombre, LocalTime horarioApertura, LocalTime horarioCierre,
-			EstadoEstacion estado){
+	public Estacion(Integer id, String nombre, LocalTime horarioApertura, LocalTime horarioCierre,EstadoEstacion estado){
 		this.id = id;
 		this.nombre = nombre;
 		this.horarioApertura = horarioApertura;
 		this.horarioCierre = horarioCierre;
 		this.estado = estado;
-		this.mantenimientos = new ArrayList<Mantenimiento>();
 	}
 
-	public Estacion(String nombre, LocalTime horarioApertura, LocalTime horarioCierre,
-			EstadoEstacion estado){
+	public Estacion(String nombre, LocalTime horarioApertura, LocalTime horarioCierre,EstadoEstacion estado){
 		this.nombre = nombre;
 		this.horarioApertura = horarioApertura;
 		this.horarioCierre = horarioCierre;
 		this.estado = estado;
-		this.mantenimientos = new ArrayList<Mantenimiento>();
 	}
 
 	public Estacion() {
@@ -76,15 +69,13 @@ public class Estacion {
 		this.estado = estado;
 	}
 
-	public List<Mantenimiento> getMantenimientos() {
-		return mantenimientos;
+	@Override
+	public String toString() {
+//		return "Estacion [id=" + id + ", nombre=" + nombre + ", horarioApertura=" + horarioApertura + ", horarioCierre="
+//				+ horarioCierre + ", estado=" + estado + "]";
+		return nombre;
 	}
 
-	public void setMantenimientos(List<Mantenimiento> mantenimientos) {
-		this.mantenimientos = mantenimientos;
-	}
-
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,11 +84,9 @@ public class Estacion {
 		result = prime * result + ((horarioApertura == null) ? 0 : horarioApertura.hashCode());
 		result = prime * result + ((horarioCierre == null) ? 0 : horarioCierre.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((mantenimientos == null) ? 0 : mantenimientos.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
 		return result;
 	}
-	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -125,11 +114,6 @@ public class Estacion {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (mantenimientos == null) {
-			if (other.mantenimientos != null)
-				return false;
-		} else if (!mantenimientos.equals(other.mantenimientos))
-			return false;
 		if (nombre == null) {
 			if (other.nombre != null)
 				return false;
@@ -137,13 +121,11 @@ public class Estacion {
 			return false;
 		return true;
 	}
-
 	
-	@Override
-	public String toString() {
-		return "Estacion [id=" + id + ", nombre=" + nombre + ", horarioApertura=" + horarioApertura + ", horarioCierre="
-				+ horarioCierre + ", estado=" + estado + "]";
+	public Boolean operativa() {
+		return this.estado.equals(EstadoEstacion.OPERATIVA);
 	}
-
+	
+	
 	
 }

@@ -3,17 +3,20 @@ package entidades;
 public class Trayecto {
 	
 	private Integer id;
+	private LineaDeTransporte linea;
 	private Estacion origen;
 	private Estacion destino;
 	private Double distancia;
-	private Double duracion;
+	private Integer duracion;
 	private Integer cantidadMaximaPasajeros;
 	private EstadoTrayecto estado;
 	private Double costo;
-	
-	public Trayecto(Integer id, Estacion origen, Estacion destino, Double distancia, Double duracion,
-			Integer cantidadMaximaPasajeros, EstadoTrayecto estado, Double costo) {
+
+	public Trayecto(Integer id, LineaDeTransporte linea, Estacion origen, Estacion destino, Double distancia,
+			Integer duracion, Integer cantidadMaximaPasajeros, EstadoTrayecto estado, Double costo) {
+		super();
 		this.id = id;
+		this.linea = linea;
 		this.origen = origen;
 		this.destino = destino;
 		this.distancia = distancia;
@@ -21,6 +24,27 @@ public class Trayecto {
 		this.cantidadMaximaPasajeros = cantidadMaximaPasajeros;
 		this.estado = estado;
 		this.costo = costo;
+	}
+
+	public Trayecto(LineaDeTransporte linea, Estacion origen, Estacion destino, Double distancia, Integer duracion,
+			Integer cantidadMaximaPasajeros, EstadoTrayecto estado, Double costo) {
+		super();
+		this.linea = linea;
+		this.origen = origen;
+		this.destino = destino;
+		this.distancia = distancia;
+		this.duracion = duracion;
+		this.cantidadMaximaPasajeros = cantidadMaximaPasajeros;
+		this.estado = estado;
+		this.costo = costo;
+	}
+
+	public LineaDeTransporte getLinea() {
+		return linea;
+	}
+
+	public void setLinea(LineaDeTransporte linea) {
+		this.linea = linea;
 	}
 
 	public Estacion getOrigen() {
@@ -39,6 +63,14 @@ public class Trayecto {
 		this.destino = destino;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public Double getDistancia() {
 		return distancia;
 	}
@@ -47,11 +79,11 @@ public class Trayecto {
 		this.distancia = distancia;
 	}
 
-	public Double getDuracion() {
+	public Integer getDuracion() {
 		return duracion;
 	}
 
-	public void setDuracion(Double duracion) {
+	public void setDuracion(Integer duracion) {
 		this.duracion = duracion;
 	}
 
@@ -79,7 +111,6 @@ public class Trayecto {
 		this.costo = costo;
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -91,6 +122,7 @@ public class Trayecto {
 		result = prime * result + ((duracion == null) ? 0 : duracion.hashCode());
 		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((linea == null) ? 0 : linea.hashCode());
 		result = prime * result + ((origen == null) ? 0 : origen.hashCode());
 		return result;
 	}
@@ -136,6 +168,11 @@ public class Trayecto {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (linea == null) {
+			if (other.linea != null)
+				return false;
+		} else if (!linea.equals(other.linea))
+			return false;
 		if (origen == null) {
 			if (other.origen != null)
 				return false;
@@ -143,6 +180,24 @@ public class Trayecto {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+//		return "Trayecto [id=" + id + ", linea=" + linea + ", origen=" + origen + ", destino=" + destino
+//				+ ", distancia=" + distancia + ", duracion=" + duracion + ", cantidadMaximaPasajeros="
+//				+ cantidadMaximaPasajeros + ", estado=" + estado + ", costo=" + costo + "]";
+		return linea + " [" +origen.getNombre() + "," + destino.getNombre() +"]"+" -> ";
+	}
+	
+	public Boolean activa() {
+		return this.getEstado().equals(EstadoTrayecto.ACTIVO);
+	}
+	
+	public String toString2() {
+		return linea + " [" +origen.getNombre() + "," + destino.getNombre() +"]"+" -> ";
+				// Metro A1 VERDE_CLARA [Estacion A,Estacion B] ->
+	}
 	
 	
+
 }

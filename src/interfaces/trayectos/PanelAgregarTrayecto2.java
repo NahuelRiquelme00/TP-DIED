@@ -1,10 +1,8 @@
 package interfaces.trayectos;
 
 import javax.swing.JPanel;
-
 import interfaces.VentanaPrincipal;
 import javax.swing.border.TitledBorder;
-
 import dao.DAOManager;
 import daoImpl.DAOManagerImpl;
 import entidades.Estacion;
@@ -12,42 +10,37 @@ import entidades.EstadoTrayecto;
 import entidades.LineaDeTransporte;
 import entidades.Trayecto;
 import excepciones.DAOException;
-
 import javax.swing.border.EtchedBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
-public class PanelAgregarTrayecto extends JPanel {
+public class PanelAgregarTrayecto2 extends JPanel {
 
 	private static final long serialVersionUID = 6308460454389902713L;
 	private DAOManager manager;
 	private JTextField textFieldLinea;
-	private JTextField textFieldOrigen;
 	private JTextField textFieldDuracion;
 	private JTextField textFieldDistancia;
 	private JTextField textFieldCapacidad;
 	private JTextField textFieldCosto;
 	private JComboBox<?> comboBoxEstado;
 	private LineaDeTransporte linea;
-	private Estacion origen;
 	private List<Estacion> listaEstaciones;
+	private JComboBox<?> comboBoxOrigen;
 	private JComboBox<?> comboBoxDestino;
 
-	public PanelAgregarTrayecto(final VentanaPrincipal frame, Estacion e, List<Trayecto> trayecto, LineaDeTransporte l) {
+	public PanelAgregarTrayecto2(final VentanaPrincipal frame, LineaDeTransporte l) {
 		manager = DAOManagerImpl.getInstance();
-		origen = e;
 		linea = l;
 		setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Atributos del tramo", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
@@ -87,11 +80,6 @@ public class PanelAgregarTrayecto extends JPanel {
 		textFieldLinea.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textFieldLinea.setColumns(10);
 		
-		textFieldOrigen = new JTextField();
-		textFieldOrigen.setEditable(false);
-		textFieldOrigen.setFont(new Font("Dialog", Font.PLAIN, 15));
-		textFieldOrigen.setColumns(10);
-		
 		
 		//
 		try {
@@ -100,12 +88,15 @@ public class PanelAgregarTrayecto extends JPanel {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		List<Estacion> estacionesRecorrido = trayecto.stream().map(t -> t.getOrigen()).collect(Collectors.toList());
-		List<Estacion> estacionesDisponibles = listaEstaciones.stream()
-				.filter(a -> !a.equals(origen) && !estacionesRecorrido.contains(a)).collect(Collectors.toList());
-		comboBoxDestino = new JComboBox<Object>(estacionesDisponibles.toArray());
+		
+		
+		comboBoxOrigen = new JComboBox<Object>(listaEstaciones.toArray());
+		comboBoxOrigen.setSelectedIndex(-1);
+		comboBoxOrigen.setEditable(true);
+		
+		comboBoxDestino = new JComboBox<Object>(listaEstaciones.toArray());
+		comboBoxDestino.setEnabled(true);
 		comboBoxDestino.setSelectedIndex(-1);
-		comboBoxDestino.setEditable(true);
 		
 		textFieldDuracion = new JTextField();
 		textFieldDuracion.setFont(new Font("Dialog", Font.PLAIN, 15));
@@ -134,24 +125,17 @@ public class PanelAgregarTrayecto extends JPanel {
 				frame.cambiarPanel(VentanaPrincipal.PANE_VER_TRAYECTOS);
 			}
 		});
+		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(228, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblLinea)
 							.addGap(153)
 							.addComponent(textFieldLinea, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblEstacionOrigen)
-							.addGap(78)
-							.addComponent(textFieldOrigen, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblEstacionDestino)
-							.addGap(72)
-							.addComponent(comboBoxDestino, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblDuracion)
 							.addGap(128)
@@ -176,20 +160,28 @@ public class PanelAgregarTrayecto extends JPanel {
 							.addGap(93)
 							.addComponent(btnNewButton)
 							.addGap(19)
-							.addComponent(btnCancelar)))
+							.addComponent(btnCancelar))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblEstacionDestino)
+								.addComponent(lblEstacionOrigen))
+							.addGap(72)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(comboBoxOrigen, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+								.addComponent(comboBoxDestino, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))))
 					.addGap(216))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(57, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblLinea)
 						.addComponent(textFieldLinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
 					.addGap(38)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblEstacionOrigen)
-						.addComponent(textFieldOrigen, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addComponent(comboBoxOrigen, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(35)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
@@ -239,13 +231,12 @@ public class PanelAgregarTrayecto extends JPanel {
 	
 	public void cargarDatos() {
 		textFieldLinea.setText(linea.getNombre());
-		textFieldOrigen.setText(origen.getNombre());	
 	}
 	
 	public Trayecto obtenerTrayecto() {
 		return new Trayecto(
 				linea, 
-				origen,
+				(Estacion)comboBoxOrigen.getSelectedItem(),
 				(Estacion)comboBoxDestino.getSelectedItem(),
 				Double.valueOf(textFieldDistancia.getText()),
 				Integer.valueOf(textFieldDuracion.getText()),
@@ -265,5 +256,4 @@ public class PanelAgregarTrayecto extends JPanel {
 			e.printStackTrace();
 		}
 	}
-	
 }

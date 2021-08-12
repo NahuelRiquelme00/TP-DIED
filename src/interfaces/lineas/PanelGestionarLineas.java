@@ -2,9 +2,7 @@ package interfaces.lineas;
 
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-
 import interfaces.VentanaPrincipal;
-
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import java.awt.Dimension;

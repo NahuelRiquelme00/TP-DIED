@@ -8,19 +8,16 @@ import java.time.LocalTime;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
 
 import dao.DAOManager;
 import daoImpl.DAOManagerImpl;
 import entidades.Estacion;
-import entidades.EstadoEstacion;
 import excepciones.DAOException;
 import interfaces.VentanaPrincipal;
 import javax.swing.border.LineBorder;
@@ -29,14 +26,15 @@ import java.awt.Color;
 public class PanelModificarEstacion extends JPanel {
 
 	private static final long serialVersionUID = -1388605330312710339L;
+	DAOManager manager;
 	private JTextField textFieldNombre;
 	private JTextField textFieldApertura;
 	private JTextField textFieldCierre;
-	JComboBox<?> comboBoxEstado;
 	private JTextField textFieldID;
 	private Estacion modificar;
 
 	public PanelModificarEstacion(final VentanaPrincipal frame, Estacion actual) {
+		manager = DAOManagerImpl.getInstance();
 		modificar = actual;
 		setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Atributos de la estacion", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
@@ -49,9 +47,6 @@ public class PanelModificarEstacion extends JPanel {
 		JLabel lblCierre = new JLabel("Hora de cierre");
 		lblCierre.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
-		JLabel lblEstado = new JLabel("Estado");
-		lblEstado.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
 		textFieldNombre = new JTextField();
 		textFieldNombre.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textFieldNombre.setColumns(10);
@@ -63,9 +58,6 @@ public class PanelModificarEstacion extends JPanel {
 		textFieldCierre = new JTextField();
 		textFieldCierre.setFont(new Font("Dialog", Font.PLAIN, 15));
 		textFieldCierre.setColumns(10);
-		
-		EstadoEstacion[] estados = {EstadoEstacion.OPERATIVA,EstadoEstacion.EN_MANTENIMIENTO};
-		comboBoxEstado = new JComboBox<Object>(estados);
 		
 		JButton btnNewButton = new JButton("Cancelar");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -95,57 +87,59 @@ public class PanelModificarEstacion extends JPanel {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(30, Short.MAX_VALUE)
-					.addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-					.addGap(287))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addGap(150)
+					.addContainerGap(156, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNombre)
-						.addComponent(lblApertura)
-						.addComponent(lblCierre)
-						.addComponent(lblEstado)
-						.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-					.addGap(63)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(textFieldID, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-							.addComponent(textFieldCierre, GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
-							.addComponent(textFieldApertura, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
-							.addComponent(textFieldNombre, GroupLayout.DEFAULT_SIZE, 7, Short.MAX_VALUE)
-							.addComponent(comboBoxEstado, 0, 7, Short.MAX_VALUE)))
-					.addGap(152))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+									.addGap(146)
+									.addComponent(textFieldID, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblNombre)
+									.addGap(146)
+									.addComponent(textFieldNombre, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblApertura)
+									.addGap(63)
+									.addComponent(textFieldApertura, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblCierre)
+									.addGap(89)
+									.addComponent(textFieldCierre, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE)))
+							.addGap(146))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+							.addGap(25)
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
+							.addGap(280))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(78)
+					.addGap(103)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textFieldID, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblId)
+						.addComponent(textFieldID, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(39)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(textFieldNombre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNombre))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNombre)
+						.addComponent(textFieldNombre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(53)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(textFieldApertura, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblApertura))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblApertura)
+						.addComponent(textFieldApertura, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(64)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(textFieldCierre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblCierre))
-					.addGap(68)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblEstado)
-						.addComponent(comboBoxEstado, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(30)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnGuardar, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCierre)
+						.addComponent(textFieldCierre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(138)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(1)
+							.addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+					.addGap(54))
 		);
 		setLayout(groupLayout);
 		
@@ -157,16 +151,15 @@ public class PanelModificarEstacion extends JPanel {
 		textFieldNombre.setText(modificar.getNombre());
 		textFieldApertura.setText(modificar.getHorarioApertura().toString());
 		textFieldCierre.setText(modificar.getHorarioCierre().toString());
-		comboBoxEstado.setSelectedItem(modificar.getEstado());
 	}
 	
 	public Estacion obtenerEstacion() {
 		return new Estacion(modificar.getId(),textFieldNombre.getText(),LocalTime.parse(textFieldApertura.getText())
-				,LocalTime.parse(textFieldCierre.getText()),(EstadoEstacion) comboBoxEstado.getSelectedItem());
+				,LocalTime.parse(textFieldCierre.getText()),modificar.getEstado());
 	}
 	
 	public void agregarEstacion() {
-		DAOManager manager = new DAOManagerImpl();
+		manager = DAOManagerImpl.getInstance();
 		Estacion nuevaEstacion = this.obtenerEstacion();
 		try {
 			manager.getEstacionDAO().crearEntidad(nuevaEstacion);
@@ -178,7 +171,6 @@ public class PanelModificarEstacion extends JPanel {
 	}
 	
 	public void modificarEstacion() {
-		DAOManager manager = new DAOManagerImpl();
 		Estacion estacionActualizada = this.obtenerEstacion();
 		try {
 			manager.getEstacionDAO().modificarEntidad(estacionActualizada);

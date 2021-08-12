@@ -1,49 +1,46 @@
 package daoImpl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import dao.DAOManager;
-import dao.TrayectoDAO;
-import entidades.Estacion;
-import entidades.EstadoTrayecto;
-import entidades.LineaDeTransporte;
-import entidades.Trayecto;
+import dao.BoletoDAO;
+import entidades.Boleto;
 import excepciones.DAOException;
 
-public class TrayectoDAOImpl implements TrayectoDAO{
-	//tp_died.trayecto(id_trayecto, id_linea, id_estacion_origen, id_estacion_destino, distancia, duracion, capacidad, estado, costo)
-	final String INSERT = "INSERT INTO tp_died.trayecto VALUES (DEFAULT,?,?,?,?,?,?,?::tp_died.estadoTrayecto,?)";
-	final String UPDATE = "UPDATE tp_died.trayecto SET id_linea = ?, id_estacion_origen = ?, id_estacion_destino = ?,  distancia = ?, duracion = ?, capacidad = ?, estado = ?::tp_died.estadoTrayecto, costo = ? WHERE id_trayecto = ?";
-	final String DELETE = "DELETE FROM tp_died.trayecto WHERE id_trayecto = ?"; 
-	final String GETONE = "SELECT * FROM tp_died.trayecto WHERE id_trayecto = ?";
-	final String GETALL = "SELECT * FROM tp_died.trayecto ORDER BY 1";	
+public class BoletoDAOimpl implements BoletoDAO{
+	//tp_died.boleto(id_boleto, correo_cliente, nombre_cliente, fecha_venta, origen, destino, camino, costo)
+	final String INSERT = "INSERT INTO tp_died.boleto VALUES (DEFAULT,?,?,?,?,?,?,?)";
+	final String UPDATE = "UPDATE tp_died.boleto SET correo_cliente = ?, nombre_cliente = ?, fecha_venta = ?,  origen = ?, destino = ?, camino = ?, costo = ? WHERE id_boleto = ?";
+	final String DELETE = "DELETE FROM tp_died.boleto WHERE id_boleto = ?"; 
+	final String GETONE = "SELECT * FROM tp_died.boleto WHERE id_boleto = ?";
+	final String GETALL = "SELECT * FROM tp_died.boleto";
 	
 	private Connection conn;
-	
-	public TrayectoDAOImpl(Connection conn) throws SQLException{
+
+	public BoletoDAOimpl(Connection conn) {
 		this.conn = conn;
 	}
 
-	public void crearEntidad(Trayecto e) throws DAOException {
+	@SuppressWarnings("static-access")
+	@Override
+	public void crearEntidad(Boleto e) throws DAOException {
 		// TODO Auto-generated method stub
 		PreparedStatement stat = null;
 		ResultSet rs = null;
 		try {
-			stat = conn.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
-			stat.setInt(1, e.getLinea().getId());
-			stat.setInt(2, e.getOrigen().getId());
-			stat.setInt(3, e.getDestino().getId());
-			stat.setDouble(4,e.getDistancia());
-			stat.setInt(5, e.getDuracion());
-			stat.setInt(6, e.getCantidadMaximaPasajeros());
-			stat.setString(7, e.getEstado().toString());
-			stat.setDouble(8, e.getCosto());
+			stat = conn.prepareStatement(INSERT, stat.RETURN_GENERATED_KEYS);
+			stat.setString(1, e.getCorreoCliente());
+			stat.setString(2, e.getNombreCliente());
+			stat.setDate(3, Date.valueOf(e.getFechaVenta()));
+			stat.setString(4,e.getOrigen());
+			stat.setString(5, e.getDestino());
+			stat.setString(6, e.getCamino());
+			stat.setDouble(7, e.getCosto());
 			if(stat.executeUpdate()==0) {
 				throw new DAOException("Puede que no se haya guardado");
 			}
@@ -51,19 +48,31 @@ public class TrayectoDAOImpl implements TrayectoDAO{
 			if(rs.next()) {
 				e.setId(rs.getInt(1));
 			}else {
-				throw new DAOException("No puedo asignar ID a este trayecto");
+				throw new DAOException("No puedo asignar ID a este Boleto");
 			}
 		} catch (SQLException ex) {
 			throw new DAOException("Error en SQL",ex);
 		} finally {
-			if(rs!=null) {try {rs.close();	} catch (SQLException ex) {	throw new DAOException("Error en SQL",ex);}}
-			if(stat!=null) {try {stat.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex);	}}
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+					throw new DAOException("Error en SQL",ex);
+				}
+			}
+			if(stat!=null) {
+				try {
+					stat.close();
+				} catch (SQLException ex) {
+					throw new DAOException("Error en SQL",ex);
+				}
+			}
 			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
 	}
 
 	@Override
-	public void eliminarEntidad(Trayecto e) throws DAOException {
+	public void eliminarEntidad(Boleto e) throws DAOException {
 		// TODO Auto-generated method stub
 		PreparedStatement stat = null;
 		try {
@@ -87,20 +96,18 @@ public class TrayectoDAOImpl implements TrayectoDAO{
 	}
 
 	@Override
-	public void modificarEntidad(Trayecto e) throws DAOException {
+	public void modificarEntidad(Boleto e) throws DAOException {
 		// TODO Auto-generated method stub
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(UPDATE);
-			stat.setInt(1, e.getLinea().getId());
-			stat.setInt(2, e.getOrigen().getId());
-			stat.setInt(3, e.getDestino().getId());
-			stat.setDouble(4,e.getDistancia());
-			stat.setInt(5, e.getDuracion());
-			stat.setInt(6, e.getCantidadMaximaPasajeros());
-			stat.setString(7, e.getEstado().toString());
-			stat.setDouble(8, e.getCosto());
-			stat.setInt(9, e.getId());
+			stat.setString(1, e.getCorreoCliente());
+			stat.setString(2, e.getNombreCliente());
+			stat.setDate(3, Date.valueOf(e.getFechaVenta()));
+			stat.setString(4,e.getOrigen());
+			stat.setString(5, e.getDestino());
+			stat.setString(6, e.getCamino());
+			stat.setDouble(7, e.getCosto());
 			if(stat.executeUpdate()==0) {
 				throw new DAOException("Puede que no se haya modificado");
 			}
@@ -118,39 +125,31 @@ public class TrayectoDAOImpl implements TrayectoDAO{
 		}
 	}
 
-	private Trayecto convertir (ResultSet rs) throws SQLException, DAOException {
+	private Boleto convertir (ResultSet rs) throws SQLException {		
+		Integer id = rs.getInt(1);
+		String correo_cliente = rs.getString(2);
+		String nombre_cliente = rs.getString(3);
+		LocalDate fecha_venta = rs.getDate(4).toLocalDate();
+		String origen = rs.getString(5);
+		String destino = rs.getString(6);
+		String camino = rs.getString(7);
+		Double costo = rs.getDouble(8);
 		
-		Integer id_trayecto = rs.getInt(1);
-		Integer id_linea = rs.getInt(2);
-		Integer id_origen = rs.getInt(3);
-		Integer id_destino = rs.getInt(4);
-		Double distancia = rs.getDouble(5);
-		Integer duracion = rs.getInt(6);
-		Integer capacidad = rs.getInt(7);
-		EstadoTrayecto estado = EstadoTrayecto.valueOf(rs.getString(8));
-		Double costo = rs.getDouble(9);
-		
-		//Creo las estaciones
-		DAOManager manager = DAOManagerImpl.getInstance();
-		LineaDeTransporte linea = manager.getLineaDeTransporteDAO().obtenerEntidad(id_linea);
-		Estacion origen = manager.getEstacionDAO().obtenerEntidad(id_origen);
-		Estacion destino = manager.getEstacionDAO().obtenerEntidad(id_destino);
-		
-		Trayecto trayecto = new Trayecto(id_trayecto, linea, origen, destino, distancia, duracion, capacidad, estado, costo);
-		return trayecto;
+		Boleto boleto = new Boleto(id, correo_cliente, nombre_cliente, fecha_venta, origen, destino, camino, costo);
+		return boleto;
 	}
 	
 	@Override
-	public List<Trayecto> obtenerTodasLasEntidades() throws DAOException {
+	public List<Boleto> obtenerTodasLasEntidades() throws DAOException {
 		// TODO Auto-generated method stub
 		PreparedStatement stat = null;
 		ResultSet rs = null;
-		List<Trayecto> trayecto = new ArrayList<Trayecto>();
+		List<Boleto> boleto = new ArrayList<Boleto>();
 		try {
 			stat = conn.prepareStatement(GETALL);
 			rs = stat.executeQuery();
 			while(rs.next()) {
-				trayecto.add(convertir(rs));
+				boleto.add(convertir(rs));
 			}
 		} catch (SQLException ex) {
 			throw new DAOException("Error en SQL",ex);
@@ -171,15 +170,15 @@ public class TrayectoDAOImpl implements TrayectoDAO{
 			}
 			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
-		return trayecto;
+		return boleto;
 	}
 
 	@Override
-	public Trayecto obtenerEntidad(Integer id) throws DAOException {
+	public Boleto obtenerEntidad(Integer id) throws DAOException {
 		// TODO Auto-generated method stub
 		PreparedStatement stat = null;
 		ResultSet rs = null;
-		Trayecto e = null;
+		Boleto e = null;
 		try {
 			stat = conn.prepareStatement(GETONE);
 			stat.setInt(1, id);

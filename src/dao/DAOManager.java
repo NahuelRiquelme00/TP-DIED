@@ -9,5 +9,7 @@ public interface DAOManager {
 	LineaDeTransporteDAO getLineaDeTransporteDAO();
 	
 	TrayectoDAO getTrayectoDAO();
+	
+	BoletoDAO getBoletoDAO();
 
 }

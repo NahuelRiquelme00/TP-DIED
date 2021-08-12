@@ -20,13 +20,14 @@ public class EstacionDAOImpl implements EstacionDAO{
 	final String UPDATE = "UPDATE tp_died.estacion SET nombre = ?, horarioApertura = ?, horarioCierre = ?, estado = ?::tp_died.estadoEstacion WHERE id_estacion = ?";
 	final String DELETE = "DELETE FROM tp_died.estacion WHERE id_estacion = ?"; 
 	final String GETONE = "SELECT * FROM tp_died.estacion WHERE id_estacion = ?";
-	final String GETALL = "SELECT * FROM tp_died.estacion";
+	final String GETALL = "SELECT * FROM tp_died.estacion ORDER BY 1";
 	
 	private Connection conn;
 	
 	public EstacionDAOImpl(Connection conn) throws SQLException {
 		this.conn = conn;
 	}
+	
 	
 	@SuppressWarnings("static-access")
 	@Override
@@ -65,6 +66,7 @@ public class EstacionDAOImpl implements EstacionDAO{
 					throw new DAOException("Error en SQL", ex);
 				}
 			}
+			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
 		
 	}
@@ -89,6 +91,7 @@ public class EstacionDAOImpl implements EstacionDAO{
 					throw new DAOException("Error en SQL", ex);
 				}
 			}
+			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
 	}
 
@@ -117,6 +120,7 @@ public class EstacionDAOImpl implements EstacionDAO{
 					throw new DAOException("Error en SQL", ex);
 				}
 			}
+			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
 	}
 	
@@ -159,6 +163,7 @@ public class EstacionDAOImpl implements EstacionDAO{
 					throw new DAOException("Error en SQL",ex); 
 				}
 			}
+			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
 		return estaciones;
 	}
@@ -195,32 +200,9 @@ public class EstacionDAOImpl implements EstacionDAO{
 					throw new DAOException("Error en SQL",ex); 
 				}
 			}
+			//if(conn!=null) {try {conn.close();} catch (SQLException ex) {throw new DAOException("Error en SQL",ex); }}
 		}
 		return e;
 	}
 
-//	public static void main(String[] args) throws SQLException, DAOException {
-//		Connection conn = null;
-//		try {
-//			EstacionDAO estacionDao = new EstacionDAOImpl();
-//			//Estacion nuevaEstacion = new Estacion("X", LocalTime.now(),LocalTime.now(),EstadoEstacion.EN_MANTENIMIENTO);
-//			//estacionDao.crearEntidad(nuevaEstacion);
-//			//System.out.println("La estacion se a generado con ID: " + nuevaEstacion.getId());
-//			List<Estacion> estaciones = estacionDao.obtenerTodasLasEntidades();
-//			for (Estacion e : estaciones) {
-//				System.out.println(e.toString());
-//			}	
-//			Estacion nuevaEstacion = new Estacion(5,"Z",LocalTime.now(),LocalTime.now(),EstadoEstacion.EN_MANTENIMIENTO);
-//			estacionDao.modificarEntidad(nuevaEstacion);
-//			estaciones = estacionDao.obtenerTodasLasEntidades();
-//			for (Estacion e : estaciones) {
-//				System.out.println(e.toString());
-//			}
-//			
-//		} finally {
-//			if (conn!=null) {
-//				conn.close();
-//			}
-//		}
-//	}
 }

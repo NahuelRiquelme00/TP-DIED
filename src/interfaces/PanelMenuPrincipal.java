@@ -39,12 +39,12 @@ public class PanelMenuPrincipal extends JPanel {
 		JButton btnGestionarTrayectos = new JButton("Gestionar Trayectos");
 		btnGestionarTrayectos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.cambiarPanel(VentanaPrincipal.PANE_MENU_GESTIONAR_TRAYECTOS);
+				frame.cambiarPanel(VentanaPrincipal.PANE_VER_TRAYECTOS);
 			}
 		});
 		btnGestionarTrayectos.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
-		JButton btnComprarBoletos = new JButton("Comprar Boleto");
+		JButton btnComprarBoletos = new JButton("Gestionar Boletos");
 		btnComprarBoletos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.cambiarPanel(VentanaPrincipal.PANE_MENU_GESTIONAR_BOLETOS);

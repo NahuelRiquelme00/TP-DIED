@@ -33,9 +33,11 @@ public class PanelAgregarEstacion extends JPanel {
 	private JTextField textFieldNombre;
 	private JTextField textFieldApertura;
 	private JTextField textFieldCierre;
+	private DAOManager manager;
 	JComboBox<?> comboBoxEstado;
 
 	public PanelAgregarEstacion(final VentanaPrincipal frame) {
+		manager = DAOManagerImpl.getInstance();
 		setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Atributos de la estacion", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
 		JLabel lblNombre = new JLabel("Nombre");
@@ -64,6 +66,7 @@ public class PanelAgregarEstacion extends JPanel {
 		
 		EstadoEstacion[] estados = {EstadoEstacion.OPERATIVA,EstadoEstacion.EN_MANTENIMIENTO};
 		comboBoxEstado = new JComboBox<Object>(estados);
+		comboBoxEstado.setEnabled(false);
 		
 		JButton btnNewButton = new JButton("Cancelar");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -93,32 +96,32 @@ public class PanelAgregarEstacion extends JPanel {
 						.addComponent(lblEstado))
 					.addGap(63)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(textFieldCierre, GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-						.addComponent(textFieldApertura, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-						.addComponent(textFieldNombre, GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-						.addComponent(comboBoxEstado, 0, 272, Short.MAX_VALUE))
+						.addComponent(textFieldCierre, GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+						.addComponent(textFieldApertura, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+						.addComponent(textFieldNombre, GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+						.addComponent(comboBoxEstado, 0, 273, Short.MAX_VALUE))
 					.addGap(146))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(295, Short.MAX_VALUE)
-					.addComponent(btnGuardar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+					.addGap(338)
+					.addComponent(btnGuardar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE)
-					.addGap(287))
+					.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGap(282))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(94)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(textFieldNombre)
+						.addComponent(textFieldNombre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNombre, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addGap(53)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(textFieldApertura)
+						.addComponent(textFieldApertura, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblApertura, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addGap(64)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(textFieldCierre)
+						.addComponent(textFieldCierre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblCierre, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addGap(68)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -127,8 +130,8 @@ public class PanelAgregarEstacion extends JPanel {
 					.addGap(78)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnGuardar, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-					.addContainerGap(80, Short.MAX_VALUE))
+						.addComponent(btnGuardar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addContainerGap(91, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 
@@ -136,11 +139,11 @@ public class PanelAgregarEstacion extends JPanel {
 	
 	public Estacion obtenerEstacion() {
 		return new Estacion(textFieldNombre.getText(),LocalTime.parse(textFieldApertura.getText())
-				,LocalTime.parse(textFieldCierre.getText()),(EstadoEstacion) comboBoxEstado.getSelectedItem());
+				,LocalTime.parse(textFieldCierre.getText()),EstadoEstacion.OPERATIVA);
 	}
 	
 	public void agregarEstacion() {
-		DAOManager manager = new DAOManagerImpl();
+		//DAOManager manager = new DAOManagerImpl();
 		Estacion nuevaEstacion = this.obtenerEstacion();
 		try {
 			manager.getEstacionDAO().crearEntidad(nuevaEstacion);

@@ -13,6 +13,7 @@ import dao.DAOManager;
 import daoImpl.DAOManagerImpl;
 import entidades.Estacion;
 import entidades.EstadoEstacion;
+import entidades.Mantenimiento;
 import excepciones.DAOException;
 import interfaces.VentanaPrincipal;
 
@@ -49,6 +50,7 @@ public class PanelBuscarEstacion extends JPanel {
 	
 
 	public PanelBuscarEstacion(final VentanaPrincipal frame) {
+		manager = DAOManagerImpl.getInstance();
 		setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Listado de estaciones", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
 		JPanel panelAtributos = new JPanel();
@@ -57,20 +59,20 @@ public class PanelBuscarEstacion extends JPanel {
 		textFieldNombre = new JTextField();
 		textFieldNombre.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Estado");
-		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 15));
+		JLabel lblEstado = new JLabel("Estado");
+		lblEstado.setFont(new Font("Dialog", Font.BOLD, 15));
 		
-		String[] estados = {"",EstadoEstacion.OPERATIVA.toString(),EstadoEstacion.EN_MANTENIMIENTO.toString()};
+		EstadoEstacion[] estados = {null ,EstadoEstacion.OPERATIVA,EstadoEstacion.EN_MANTENIMIENTO};
 		JComboBox<?> comboBoxEstado = new JComboBox<Object>(estados);
 		
 		JLabel lblNewLabel = new JLabel("Nombre");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 15));
 		
-		JLabel lblNewLabel_2 = new JLabel("Horario de apertura");
-		lblNewLabel_2.setFont(new Font("Dialog", Font.BOLD, 15));
+		JLabel lblApertura = new JLabel("Horario de apertura");
+		lblApertura.setFont(new Font("Dialog", Font.BOLD, 15));
 		
-		JLabel lblNewLabel_3 = new JLabel("Horario de cierre");
-		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 15));
+		JLabel lblCierre = new JLabel("Horario de cierre");
+		lblCierre.setFont(new Font("Dialog", Font.BOLD, 15));
 		
 		textFieldApertura = new JTextField();
 		textFieldApertura.setColumns(10);
@@ -81,18 +83,31 @@ public class PanelBuscarEstacion extends JPanel {
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<Estacion> datos;
-				if(!textFieldNombre.getText().isBlank()) {				
-					datos = model.getDatos().stream()
-					.filter(est -> est.getNombre().toLowerCase().contains(textFieldNombre.getText().toLowerCase()))
-					.collect(Collectors.toList());
-					model.setDatos(datos);
-					model.fireTableDataChanged();
-					System.out.println("Actualizando");
-				}else {
-					actualizarTabla();
-					System.out.println("Limpiando");
+				actualizarTabla();
+				List<Estacion> datos_filtro = model.getDatos();
+				if(!textFieldNombre.getText().isBlank()) {
+					datos_filtro = datos_filtro.stream()
+							.filter(est -> est.getNombre().toLowerCase().contains(textFieldNombre.getText().toLowerCase()))
+							.collect(Collectors.toList());
 				}
+				if(!textFieldApertura.getText().isBlank()) {
+					datos_filtro = datos_filtro.stream()
+							.filter(est -> est.getHorarioApertura().toString().contains(textFieldApertura.getText()))
+							.collect(Collectors.toList());
+				}
+				if(!textFieldCierre.getText().isBlank()) {
+					datos_filtro = datos_filtro.stream()
+							.filter(est -> est.getHorarioCierre().toString().contains(textFieldCierre.getText()))
+							.collect(Collectors.toList());
+				}
+				if(comboBoxEstado.getSelectedItem()!=null) {
+					datos_filtro = datos_filtro.stream()
+							.filter(est -> est.getEstado().equals(comboBoxEstado.getSelectedItem()))
+							.collect(Collectors.toList());
+				}
+				model.setDatos(datos_filtro);
+				model.fireTableDataChanged();
+				System.out.println("Actualizando");
 			}
 		});
 		GroupLayout gl_panelAtributos = new GroupLayout(panelAtributos);
@@ -106,13 +121,13 @@ public class PanelBuscarEstacion extends JPanel {
 							.addGap(68)
 							.addComponent(textFieldNombre, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panelAtributos.createSequentialGroup()
-							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblEstado, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
 							.addGap(13)
 							.addComponent(comboBoxEstado, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE)))
 					.addGap(41)
 					.addGroup(gl_panelAtributos.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_2)
-						.addComponent(lblNewLabel_3))
+						.addComponent(lblApertura)
+						.addComponent(lblCierre))
 					.addGap(18)
 					.addGroup(gl_panelAtributos.createParallelGroup(Alignment.LEADING)
 						.addComponent(textFieldApertura, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE)
@@ -133,13 +148,13 @@ public class PanelBuscarEstacion extends JPanel {
 					.addGroup(gl_panelAtributos.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelAtributos.createSequentialGroup()
 							.addGap(3)
-							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+							.addComponent(lblEstado, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
 						.addComponent(comboBoxEstado, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 				.addGroup(gl_panelAtributos.createSequentialGroup()
 					.addGap(17)
-					.addComponent(lblNewLabel_2)
+					.addComponent(lblApertura)
 					.addGap(21)
-					.addComponent(lblNewLabel_3))
+					.addComponent(lblCierre))
 				.addGroup(gl_panelAtributos.createSequentialGroup()
 					.addGap(16)
 					.addComponent(textFieldApertura, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
@@ -161,7 +176,6 @@ public class PanelBuscarEstacion extends JPanel {
 		panelOpciones.setBorder(new TitledBorder(null, "Opciones", TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		
 		JButton btnEditar = new JButton("Editar");
-		btnEditar.setBounds(29, 39, 132, 26);
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.cambiarPanel(VentanaPrincipal.PANE_MODIFICAR_ESTACION);
@@ -169,41 +183,57 @@ public class PanelBuscarEstacion extends JPanel {
 		});
 		btnEditar.setEnabled(false);
 		
-		JButton btnMantenimientos = new JButton("Ver Mantenimientos");
+		JButton btnMantenimientos = new JButton("Ver mantenimientos");
 		btnMantenimientos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.cambiarPanel(VentanaPrincipal.PANE_VER_MANTENIMIENTOS_ESTACION);
 			}
 		});
-		btnMantenimientos.setBounds(21, 115, 148, 26);
 		btnMantenimientos.setEnabled(false);
 		
-		JButton btnAgregarMantenimiento = new JButton("Agregar  Mantenimiento");
-		btnAgregarMantenimiento.setBounds(12, 153, 170, 26);
-		btnAgregarMantenimiento.addActionListener(new ActionListener() {
+		JButton btnCambiarEstado = new JButton("Cambiar estado");
+		btnCambiarEstado.setEnabled(false);
+		btnCambiarEstado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.cambiarPanel(VentanaPrincipal.PANE_AGREGAR_MANTENIMIENTO);
+				if(actual.getEstado().equals(EstadoEstacion.OPERATIVA)) {
+					int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro iniciar un mantenimiento?", "Iniciar mantenimiento",
+							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(opcion==0) {
+						frame.cambiarPanel(VentanaPrincipal.PANE_INICIAR_MANTENIMIENTO);
+					}	
+				}else {
+					int opcion = JOptionPane.showConfirmDialog(null, "¿Desea finalizar el mantenimiento?", "Finalizar mantenimiento",
+							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+					if(opcion==0) {
+						//frame.cambiarPanel(VentanaPrincipal.PANE_FINALIZAR_MANTENIMIENTO);
+						Mantenimiento soloEst = new Mantenimiento(actual.getId());
+						try {
+							manager.getMantenimientoDAO().modificarEntidad(soloEst);
+						} catch (DAOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						};
+						actualizarTabla();
+						JOptionPane.showMessageDialog(null, "El mantenimiento ha finalizado","Mantenimiento finalizado", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				
 			}
 		});
-		btnAgregarMantenimiento.setToolTipText("Agregar Mantenimiento");
-		btnAgregarMantenimiento.setFont(new Font("Dialog", Font.BOLD, 12));
-		btnAgregarMantenimiento.setEnabled(false);
 		
 		JButton btnBorrar = new JButton("Borrar");
-		btnBorrar.setBounds(29, 77, 132, 26);
 		btnBorrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int opcion = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar la estacion?", "Eliminar estacion",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if(opcion == 0) {
-					DAOManager manager = new DAOManagerImpl();
 					try {
 						manager.getEstacionDAO().eliminarEntidad(actual);
 						System.out.println("Estacion eliminada");
 						btnEditar.setEnabled(false);
 						btnBorrar.setEnabled(false);
 						btnMantenimientos.setEnabled(false);
-						btnAgregarMantenimiento.setEnabled(false);
+						btnCambiarEstado.setEnabled(false);
 						actualizarTabla();
 						//desabilitarBotones();						
 					} catch (DAOException e1) {
@@ -237,17 +267,41 @@ public class PanelBuscarEstacion extends JPanel {
 					.addComponent(panelOpciones, GroupLayout.PREFERRED_SIZE, 209, GroupLayout.PREFERRED_SIZE)
 					.addGap(64))
 		);
-		panelOpciones.setLayout(null);
-		panelOpciones.add(btnEditar);
-		panelOpciones.add(btnBorrar);
-		panelOpciones.add(btnMantenimientos);
-		panelOpciones.add(btnAgregarMantenimiento);
+		GroupLayout gl_panelOpciones = new GroupLayout(panelOpciones);
+		gl_panelOpciones.setHorizontalGroup(
+			gl_panelOpciones.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelOpciones.createSequentialGroup()
+					.addGap(56)
+					.addComponent(btnEditar))
+				.addGroup(gl_panelOpciones.createSequentialGroup()
+					.addGap(54)
+					.addComponent(btnBorrar))
+				.addGroup(gl_panelOpciones.createSequentialGroup()
+					.addGap(28)
+					.addComponent(btnCambiarEstado))
+				.addGroup(gl_panelOpciones.createSequentialGroup()
+					.addGap(15)
+					.addComponent(btnMantenimientos))
+		);
+		gl_panelOpciones.setVerticalGroup(
+			gl_panelOpciones.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panelOpciones.createSequentialGroup()
+					.addGap(21)
+					.addComponent(btnEditar)
+					.addGap(12)
+					.addComponent(btnBorrar)
+					.addGap(12)
+					.addComponent(btnCambiarEstado)
+					.addGap(12)
+					.addComponent(btnMantenimientos))
+		);
+		panelOpciones.setLayout(gl_panelOpciones);
 		
+		//Codigo de la tabla
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		panelEstaciones.setLayout(gl_panelEstaciones);
 		
-		manager = new DAOManagerImpl();
 		this.model = new EstacionTableModel(manager.getEstacionDAO());
 		this.model.updateModel();
 		this.table.setModel(model);
@@ -258,11 +312,11 @@ public class PanelBuscarEstacion extends JPanel {
 				// TODO Auto-generated method stub
 				int filasSeleccionadas = table.getSelectedRowCount();
 				if(filasSeleccionadas == 1) {
-					//habilitarBotones();
+					//Habilitar botones
 					btnBorrar.setEnabled(true);
 					btnEditar.setEnabled(true);
 					btnMantenimientos.setEnabled(true);
-					btnAgregarMantenimiento.setEnabled(true);
+					btnCambiarEstado.setEnabled(true);
 					row_selected = table.getSelectedRow();
 					Integer idEstacion = (Integer) table.getValueAt(row_selected,0);
 					try {
@@ -294,9 +348,10 @@ public class PanelBuscarEstacion extends JPanel {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 					.addComponent(panelEstaciones, GroupLayout.PREFERRED_SIZE, 780, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(685)
-					.addComponent(btnVolver, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(708, Short.MAX_VALUE)
+					.addComponent(btnVolver)
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -305,23 +360,12 @@ public class PanelBuscarEstacion extends JPanel {
 					.addComponent(panelAtributos, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
 					.addGap(11)
 					.addComponent(panelEstaciones, GroupLayout.PREFERRED_SIZE, 382, GroupLayout.PREFERRED_SIZE)
-					.addGap(9)
-					.addComponent(btnVolver))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnVolver)
+					.addGap(4))
 		);
 		setLayout(groupLayout);
 
-	}
-	
-	public void habilitarBotones() {
-		btnBorrar.setEnabled(true);
-		btnEditar.setEnabled(true);
-		btnMantenimientos.setEnabled(true);
-	}
-	
-	public void desabilitarBotones() {
-		btnEditar.setEnabled(false);
-		btnBorrar.setEnabled(false);
-		btnMantenimientos.setEnabled(false);
 	}
 	
 	public void actualizarTabla() {

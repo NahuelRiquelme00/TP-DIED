@@ -7,14 +7,24 @@ import dao.*;
 
 public class DAOManagerImpl implements DAOManager{
 	
-	private Connection conn;
+	private static DAOManager DAOManagerInstance;
+	
+	private static Connection conn;
 	
 	private EstacionDAO estaciones = null;
 	private MantenimientoDAO mantenimientos = null;
 	private LineaDeTransporteDAO lineasDeTransporte = null;
 	private TrayectoDAO trayectos = null; 
+	private BoletoDAO boletos = null;
 	
-	public DAOManagerImpl() {
+	public static DAOManager getInstance() {
+		if(DAOManagerInstance==null) {
+			DAOManagerInstance = new DAOManagerImpl();
+		}
+		return DAOManagerInstance;
+	}
+	
+	private DAOManagerImpl() {
 		try {
 			conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres", "ramonesb");
 		} catch (SQLException e) {
@@ -34,6 +44,7 @@ public class DAOManagerImpl implements DAOManager{
 				e.printStackTrace();
 			}
 		}
+		//try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		return estaciones;
 	}
 
@@ -43,6 +54,7 @@ public class DAOManagerImpl implements DAOManager{
 		if (mantenimientos == null) {
 			mantenimientos = new MantenimientoDAOImpl(conn);
 		}
+		//try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		return mantenimientos;
 	}
 
@@ -57,6 +69,7 @@ public class DAOManagerImpl implements DAOManager{
 				e.printStackTrace();
 			}
 		}
+		//try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		return lineasDeTransporte;
 	}
 
@@ -64,15 +77,25 @@ public class DAOManagerImpl implements DAOManager{
 	public TrayectoDAO getTrayectoDAO() {
 		// TODO Auto-generated method stub
 		if (trayectos == null) {
-			trayectos = new TrayectoDAOImpl(conn);
+			try {
+				trayectos = new TrayectoDAOImpl(conn);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		//try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		return trayectos;
 	}
 
-	//Para probar el DAOManager
-//	public static void main(String[] args) throws DAOException, SQLException {
-//		DAOManagerImpl man = new DAOManagerImpl();
-//		List<Estacion> estaciones = man.getEstacionDAO().obtenerTodasLasEntidades();
-//		System.out.println(estaciones);
-//	}
+	@Override
+	public BoletoDAO getBoletoDAO() {
+		// TODO Auto-generated method stub
+		if(boletos == null) {
+			boletos = new BoletoDAOimpl(conn);
+		}
+		//try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		return boletos;
+	}
+
 }

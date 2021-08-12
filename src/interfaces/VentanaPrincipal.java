@@ -3,16 +3,16 @@ package interfaces;
 import java.awt.Container;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-
 import interfaces.boletos.PanelComprarBoleto;
 import interfaces.boletos.PanelGestionarBoletos;
 import interfaces.boletos.PanelVerBoletos;
+import interfaces.boletos.PanelVerCombinaciones;
 import interfaces.estacion.PanelAgregarEstacion;
-import interfaces.estacion.PanelAgregarMantenimiento;
 import interfaces.estacion.PanelBuscarEstacion;
 import interfaces.estacion.PanelFlujoMaximo;
-import interfaces.estacion.PanelGestionarEstaciones2;
+import interfaces.estacion.PanelGestionarEstaciones;
 import interfaces.estacion.PanelInformacionEstaciones;
+import interfaces.estacion.PanelIniciarMantenimiento;
 import interfaces.estacion.PanelMantenimientosEstacion;
 import interfaces.estacion.PanelModificarEstacion;
 import interfaces.estacion.PanelPageRank;
@@ -20,10 +20,12 @@ import interfaces.estacion.PanelProximoMantenimiento;
 import interfaces.lineas.PanelAgregarLinea;
 import interfaces.lineas.PanelBuscarLinea;
 import interfaces.lineas.PanelGestionarLineas;
+import interfaces.lineas.PanelModificarLinea;
 import interfaces.trayectos.PanelAgregarTrayecto;
+import interfaces.trayectos.PanelAgregarTrayecto2;
 import interfaces.trayectos.PanelGestionarTrayectos;
+import interfaces.trayectos.PanelModificarTrayecto;
 import interfaces.trayectos.PanelVerTrayectos;
-
 
 public class VentanaPrincipal extends JFrame {
 
@@ -35,7 +37,7 @@ public class VentanaPrincipal extends JFrame {
 	public static final int PANE_BUSCAR_ESTACION = 3;
 	public static final int PANE_MODIFICAR_ESTACION = 4;
 	public static final int PANE_VER_MANTENIMIENTOS_ESTACION = 5;
-	public static final int PANE_AGREGAR_MANTENIMIENTO = 6;
+	public static final int PANE_INICIAR_MANTENIMIENTO = 6;
 	public static final int PANE_MENU_INFORMACION_ESTACIONES = 7;
 	public static final int PANE_FLUJO_MAXIMO = 8;
 	public static final int PANE_PAGE_RANK = 9;	
@@ -46,13 +48,15 @@ public class VentanaPrincipal extends JFrame {
 	public static final int PANE_MODIFICAR_LINEA = 14;
 	public static final int PANE_MENU_GESTIONAR_TRAYECTOS = 16;
 	public static final int PANE_AGREGAR_TRAYECTO = 17;
-	public static final int PANE_VER_TRAYECTOS = 18;
+	public static final int PANE_AGREGAR_TRAYECTO2 = 24;
+	public static final int PANE_MODIFICAR_TRAYECTO = 18;
+	public static final int PANE_VER_TRAYECTOS = 19;
 	public static final int PANE_MENU_GESTIONAR_BOLETOS = 20;
 	public static final int PANE_COMPRAR_BOLETO = 21;
 	public static final int PANE_VER_BOLETOS = 22;
+	public static final int PANE_VER_COMBINACIONES = 23;
 	
 	private Container previousPane;
-	private Container previouspreviousPane;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -77,7 +81,6 @@ public class VentanaPrincipal extends JFrame {
 	}
 
 	public void cambiarPanel(int panel)  {
-		previouspreviousPane = previousPane;
 		previousPane = this.getContentPane();
 		switch(panel) {
 		case PANE_MENU_PRINCIPAL:
@@ -86,7 +89,7 @@ public class VentanaPrincipal extends JFrame {
 			this.pack();
 			break;
 		case PANE_MENU_GESTIONAR_ESTACIONES:
-			this.setContentPane(new PanelGestionarEstaciones2(this));
+			this.setContentPane(new PanelGestionarEstaciones(this));
 			this.setTitle("Gestionar estaciones");
 			this.pack();
 			break;
@@ -110,9 +113,9 @@ public class VentanaPrincipal extends JFrame {
 			this.setTitle("Historial de mantenimientos de la estacion seleccionada");
 			this.pack();
 			break;
-		case PANE_AGREGAR_MANTENIMIENTO:
-			this.setContentPane(new PanelAgregarMantenimiento(this,((PanelBuscarEstacion) previousPane).getEstacion()));
-			this.setTitle("Agregar mantenimiento");
+		case PANE_INICIAR_MANTENIMIENTO:
+			this.setContentPane(new PanelIniciarMantenimiento(this,((PanelBuscarEstacion) previousPane).getEstacion()));
+			this.setTitle("Iniciar mantenimiento");
 			this.pack();
 			break;
 		case PANE_MENU_INFORMACION_ESTACIONES:
@@ -132,7 +135,7 @@ public class VentanaPrincipal extends JFrame {
 			break;
 		case PANE_PROXIMO_MANTENIMIENTO:
 			this.setContentPane(new PanelProximoMantenimiento(this));
-			this.setTitle("Ver proximos manteniemientos programados");
+			this.setTitle("Ver proximos mantenimientos programados");
 			this.pack();
 			break;
 		case PANE_MENU_GESTIONAR_LINEAS:
@@ -150,16 +153,31 @@ public class VentanaPrincipal extends JFrame {
 			this.setTitle("Buscar linea de transporte");
 			this.pack();
 			break;
+		case PANE_MODIFICAR_LINEA:
+			this.setContentPane(new PanelModificarLinea(this,((PanelBuscarLinea) previousPane).getLinea()));
+			this.setTitle("Modificar linea de transporte");
+			this.pack();
+			break;
 		case PANE_MENU_GESTIONAR_TRAYECTOS:
 			this.setContentPane(new PanelGestionarTrayectos(this));
 			this.setTitle("Gestion de trayectos");
 			this.pack();
 			break;
 		case PANE_AGREGAR_TRAYECTO:
-			this.setContentPane(new PanelAgregarTrayecto(this));
+			this.setContentPane(new PanelAgregarTrayecto(this,((PanelVerTrayectos)previousPane).getOrigen(),((PanelVerTrayectos)previousPane).getTrayecto(),((PanelVerTrayectos)previousPane).getLinea()));
 			this.setTitle("Agregar trayecto");
 			this.pack();
 			break;
+		case PANE_AGREGAR_TRAYECTO2:
+			this.setContentPane(new PanelAgregarTrayecto2(this,((PanelVerTrayectos)previousPane).getLinea()));
+			this.setTitle("Agregar trayecto");
+			this.pack();
+			break;
+		case PANE_MODIFICAR_TRAYECTO:
+			this.setContentPane(new PanelModificarTrayecto(this,((PanelVerTrayectos)previousPane).getTramo()));
+			this.setTitle("Modificar trayecto");
+			this.pack();
+			break;		
 		case PANE_VER_TRAYECTOS:
 			this.setContentPane(new PanelVerTrayectos(this));
 			this.setTitle("Ver listado de trayectos");
@@ -171,8 +189,14 @@ public class VentanaPrincipal extends JFrame {
 			this.pack();
 			break;
 		case PANE_COMPRAR_BOLETO:
-			this.setContentPane(new PanelComprarBoleto(this));
+			setBounds(100, 100, 800, 600);
+			this.setContentPane(new PanelComprarBoleto(this,((PanelVerCombinaciones)previousPane).getSeleccionado()));
 			this.setTitle("Comprar boleto");
+			this.pack();
+			break;
+		case PANE_VER_COMBINACIONES:
+			this.setContentPane(new PanelVerCombinaciones(this));
+			this.setTitle("Combinaciones de recorridos");
 			this.pack();
 			break;
 		case PANE_VER_BOLETOS:
@@ -185,10 +209,4 @@ public class VentanaPrincipal extends JFrame {
 		this.getContentPane().setVisible(true);
 	}
 	
-	public void backPreviousPane() {
-		getContentPane().setVisible(false);
-		this.setContentPane(previousPane);
-		previousPane=previouspreviousPane;
-		getContentPane().setVisible(true);
-	}
 }

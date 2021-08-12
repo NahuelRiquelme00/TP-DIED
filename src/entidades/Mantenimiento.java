@@ -5,15 +5,37 @@ import java.time.LocalDate;
 public class Mantenimiento {
 	
 	private Integer id;
+	private Integer idEstacion;
 	private LocalDate fechaInicio;
 	private LocalDate fechaFin;
 	private String observaciones;
 	
-	public Mantenimiento(Integer id, LocalDate fechaInicio, LocalDate fechaFin, String observaciones) {
+	public Mantenimiento(Integer id, Integer idEstacion, LocalDate fechaInicio, LocalDate fechaFin,
+			String observaciones) {
 		this.id = id;
+		this.idEstacion = idEstacion;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
 		this.observaciones = observaciones;
+	}
+
+	public Mantenimiento(Integer idEstacion, LocalDate fechaInicio, LocalDate fechaFin, String observaciones) {
+		this.idEstacion = idEstacion;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.observaciones = observaciones;
+	}
+	
+	public Mantenimiento(Integer idest) {
+		this.idEstacion=idest;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public LocalDate getFechaInicio() {
@@ -40,7 +62,6 @@ public class Mantenimiento {
 		this.observaciones = observaciones;
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -83,9 +104,13 @@ public class Mantenimiento {
 			return false;
 		return true;
 	}
-	
-	
-	
-	
 
+	public Integer getIdEstacion() {
+		return idEstacion;
+	}
+
+	public void setIdEstacion(Integer idEstacion) {
+		this.idEstacion = idEstacion;
+	}
+	
 }
