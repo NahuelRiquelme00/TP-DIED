@@ -1,5 +1,5 @@
 package grafo;
-
+//Clase grafo
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 public class Graph <T> {
-	private List<Edge<T>> edges;
-	private List<Vertex<T>> vertexs;
+	private List<Edge<T>> edges;//Aristas = Trayectos
+	private List<Vertex<T>> vertexs;//Nodos = Estaciones
 
 	public Graph(){
 		this.edges = new ArrayList<Edge<T>>();
@@ -174,38 +174,6 @@ public class Graph <T> {
     	}
     	
     	return false;
-    }
-    
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<List<Vertex<T>>> caminos(T v1,T v2){
-    	return this.caminos(new Vertex(v1), new Vertex(v2));
-    }
-    
-    public List<List<Vertex<T>>> caminos(Vertex<T> v1,Vertex<T> v2){
-    	List<List<Vertex<T>>> salida = new ArrayList<List<Vertex<T>>>();
-    	List<Vertex<T>> marcados = new ArrayList<Vertex<T>>();
-    	marcados.add(v1);
-    	buscarCaminosAux(v1,v2,marcados,salida);
-    	return salida;
-   }
-    
-    private void buscarCaminosAux(Vertex<T> v1,Vertex<T> v2, List<Vertex<T>> marcados, List<List<Vertex<T>>> todos) {
-    	List<Vertex<T>> adyacentes = getNeighbourhood(v1);
-    	List<Vertex<T>> copiaMarcados = null;
-    	
-    	for(Vertex<T> ady: adyacentes){
-    		copiaMarcados = marcados.stream().collect(Collectors.toList());
-    		
-    		if(ady.equals(v2)) {
-    			copiaMarcados.add(v2);
-    			todos.add(new ArrayList<Vertex<T>>(copiaMarcados));
-    		} else {
-    			if(!copiaMarcados.contains(ady)) {
-    					copiaMarcados.add(ady);
-    						this.buscarCaminosAux(ady,v2,copiaMarcados,todos);
-    			}
-    		}
-    	}
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

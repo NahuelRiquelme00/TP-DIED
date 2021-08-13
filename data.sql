@@ -65,4 +65,4 @@ VALUES	(DEFAULT,5,1,2,5.0,6,40,'ACTIVO',40),
 
 --tp_died.boleto(id_boleto, correo_cliente, nombre_cliente, fecha_venta, origen, destino, camino, costo)
 INSERT INTO tp_died.boleto
-VALUES (DEFAULT,'nahuelriquelme00@gmail.com','Nahuel Riquelme','2020-09-05','Estacion XY','Estacion ZW','Camino',150);
+VALUES (DEFAULT,'nahuelriquelme00@gmail.com','Nahuel Riquelme','2020-09-05','Estacion XY','Estacion ZW','Camino de prueba',150);

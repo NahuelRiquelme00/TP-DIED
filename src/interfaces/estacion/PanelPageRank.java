@@ -39,7 +39,7 @@ public class PanelPageRank extends JPanel {
 	List<Estacion> estaciones;
 	List<Trayecto> rutas;
 	private static final double d = 0.5; //para el factor de amortiguacion
-	private static final double eCorte = 0.00000001; //para el valor de corte
+	private static final double eCorte = 0.00000001; //para el valor de corte, finaliza al ser menor
 
 	public PanelPageRank(final VentanaPrincipal frame) {
 		manager = DAOManagerImpl.getInstance();
@@ -109,6 +109,7 @@ public class PanelPageRank extends JPanel {
 		model.fireTableDataChanged();
 		table.setRowSelectionInterval(0,0);
 	}
+	
 	private Map<Estacion,Double> calcularPR() {	
 		
 		try {

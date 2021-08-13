@@ -1,5 +1,5 @@
 package grafo;
-
+//Clase vertices/nodos
 public class Vertex<T> {
 
 	private T value;
@@ -17,8 +17,6 @@ public class Vertex<T> {
 	public T getValue(){
 		return this.value;
 	}
-	
-	
 	
 	@Override
 	public int hashCode() {

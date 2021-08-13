@@ -6,6 +6,8 @@ import interfaces.VentanaPrincipal;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import dao.DAOManager;
 import daoImpl.DAOManagerImpl;
@@ -17,6 +19,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.ScrollPaneConstants;
 
 public class PanelVerBoletos extends JPanel {
@@ -38,15 +42,33 @@ public class PanelVerBoletos extends JPanel {
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
-		//Codigo de la tabla
-		table = new JTable();
-		scrollPane.setViewportView(table);		
-		this.model = new BoletoTableModel(manager.getBoletoDAO());
-		this.model.updateModel();
-		this.table.setModel(model);
+		//Codigo de la tabla 1
+//		table = new JTable();
+//		scrollPane.setViewportView(table);		
+//		this.model = new BoletoTableModel(manager.getBoletoDAO());
+//		this.model.updateModel();
+//		this.table.setModel(model);
+		
+		//Codigo tabla 2
+		 table = new JTable(){
+			private static final long serialVersionUID = 4041598019402556774L;
+			@Override
+			    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+			      Component component = super.prepareRenderer(renderer, row, column);
+			      int rendererWidth = component.getPreferredSize().width;
+			      TableColumn tableColumn = getColumnModel().getColumn(column);
+			      tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+			      return component;
+			    }
+			  };
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			this.model = new BoletoTableModel(manager.getBoletoDAO());
+			this.model.updateModel();
+			this.table.setModel(model);
+			scrollPane.setViewportView(table);
 		
 		
 		GroupLayout groupLayout = new GroupLayout(this);

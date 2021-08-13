@@ -1,5 +1,5 @@
 package grafo;
-
+//Clase aristas
 public class Edge<T> {
 
 	private Vertex<T> origin;
@@ -102,9 +102,4 @@ public class Edge<T> {
 			return false;
 		return true;
 	}
-
-	
-	
-	
-
 }

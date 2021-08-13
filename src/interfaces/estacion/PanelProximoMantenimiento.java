@@ -40,7 +40,7 @@ public class PanelProximoMantenimiento extends JPanel {
 	public PanelProximoMantenimiento(final VentanaPrincipal frame) {
 		manager = DAOManagerImpl.getInstance();
 		ultimosMantenimientos = ((MantenimientoDAOImpl)manager.getMantenimientoDAO()).recuperarUltimosMantenimientos();
-		setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Proximos Mantenimientos", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Proximas estaciones a reparar", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.addActionListener(new ActionListener() {

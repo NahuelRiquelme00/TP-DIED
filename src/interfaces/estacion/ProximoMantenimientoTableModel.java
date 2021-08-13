@@ -8,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 public class ProximoMantenimientoTableModel extends AbstractTableModel{
 	
 	private static final long serialVersionUID = 7769458027689452018L;
-	String[] columnNames = {"ID estacion","Nombre estacion","Fecha"};
+	String[] columnNames = {"ID estacion","Nombre estacion","Fecha ultimo mantenimiento"};
 	List<List<Object>> data;
 	
 	public ProximoMantenimientoTableModel() {

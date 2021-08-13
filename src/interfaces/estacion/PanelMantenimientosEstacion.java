@@ -10,6 +10,8 @@ import javax.swing.border.TitledBorder;
 import dao.DAOManager;
 import daoImpl.DAOManagerImpl;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
@@ -100,5 +102,9 @@ public class PanelMantenimientosEstacion extends JPanel {
 		table.setModel(model);
 		
 		setLayout(groupLayout);
+		
+		if(mant.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "No existen mantenimientos realizados en esta estacion","Mantenimientos inexistentes", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 }

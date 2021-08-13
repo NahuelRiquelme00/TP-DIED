@@ -15,15 +15,20 @@ import excepciones.DAOException;
 import grafo.Edge;
 import grafo.Graph;
 import interfaces.VentanaPrincipal;
+import interfaces.grafico.FrameMostrarCamino;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.event.ActionListener;
@@ -32,9 +37,8 @@ import java.time.LocalTime;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import java.awt.Cursor;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 
 public class PanelVerCombinaciones extends JPanel {
 
@@ -65,11 +69,11 @@ public class PanelVerCombinaciones extends JPanel {
 	private Integer rowMasRapido;
 	private Integer rowMasBarato;
 	private Integer rowMenorDistancia;	
+	private JButton btnRecorrido;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public PanelVerCombinaciones(final VentanaPrincipal frame) {
 		manager = DAOManagerImpl.getInstance();
-		//Cargo estaciones y rutas operativas
 		try {
 			estaciones = manager.getEstacionDAO().obtenerTodasLasEntidades().stream().filter(est -> est.operativa()).collect(Collectors.toList());
 		} catch (DAOException e1) {
@@ -103,7 +107,7 @@ public class PanelVerCombinaciones extends JPanel {
 				for(Estacion e1 : aux) {
 					lDestino.addItem(e1);
 				}
-			
+		
 				lDestino.setSelectedItem(destSeleccionada);
 			}
 		});
@@ -292,28 +296,57 @@ public class PanelVerCombinaciones extends JPanel {
 		
 		//Codigo tabla
 		model = new CaminosTableModel();
-		table = new JTable(model);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		table.setAutoscrolls(false);
-		table.getColumnModel().getColumn(0).setPreferredWidth(800);
-		table.getColumnModel().getColumn(1).setPreferredWidth(10);
-		table.getColumnModel().getColumn(2).setPreferredWidth(10);
-		table.getColumnModel().getColumn(3).setPreferredWidth(5);
-		scrollPane.setViewportView(table);
 		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {		
+		//Opcion 1
+//		table = new JTable(model);
+//		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		//table.getColumnModel().getColumn(0).setPreferredWidth(800);
+//		//table.getColumnModel().getColumn(1).setPreferredWidth(10);
+//		//table.getColumnModel().getColumn(2).setPreferredWidth(10);
+//		//table.getColumnModel().getColumn(3).setPreferredWidth(5);
+//		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+//		scrollPane.setViewportView(table);
+		
+		
+		//Opcion 2
+		 table = new JTable(){
+			private static final long serialVersionUID = -3117727877073761017L;
+			@Override
+			    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+			      Component component = super.prepareRenderer(renderer, row, column);
+			      int rendererWidth = component.getPreferredSize().width;
+			      TableColumn tableColumn = getColumnModel().getColumn(column);
+			      tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+			      return component;
+			    }
+			  };
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			table.setModel(model);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			scrollPane.setViewportView(table);
+		
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {		
 			public void valueChanged(ListSelectionEvent e) {
 				Integer filaSeleccionada = table.getSelectedRow();
 				
 				if(filaSeleccionada != -1) {
 					seleccionado = (List<Trayecto>) model.getValueAt(filaSeleccionada, 0);
 					btnComprar.setEnabled(true);
+					btnRecorrido.setEnabled(true);
 				}
 				
 			}
 		});
 		panelGrafico.setLayout(gl_panelGrafico);
+		
+		btnRecorrido = new JButton("Ver recorrido");
+		btnRecorrido.setEnabled(false);
+		btnRecorrido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FrameMostrarCamino fmc = new FrameMostrarCamino(estaciones, seleccionado);
+				fmc.setVisible(true);
+			}
+		});
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -323,10 +356,12 @@ public class PanelVerCombinaciones extends JPanel {
 						.addComponent(panelSeleccionar, GroupLayout.PREFERRED_SIZE, 267, GroupLayout.PREFERRED_SIZE)
 						.addComponent(panelCriterios, GroupLayout.PREFERRED_SIZE, 267, GroupLayout.PREFERRED_SIZE))
 					.addGap(15)
-					.addComponent(panelGrafico, GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+					.addComponent(panelGrafico, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addContainerGap())
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap(596, Short.MAX_VALUE)
+					.addContainerGap(480, Short.MAX_VALUE)
+					.addComponent(btnRecorrido)
+					.addGap(18)
 					.addComponent(btnComprar, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
 					.addGap(12)
 					.addComponent(btnVolver, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
@@ -344,12 +379,14 @@ public class PanelVerCombinaciones extends JPanel {
 						.addComponent(panelGrafico, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(42)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(btnComprar)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnComprar)
+							.addComponent(btnRecorrido))
 						.addComponent(btnVolver))
 					.addGap(6))
 		);
 		setLayout(groupLayout);
-		//Continuacion		
+		
 		distancias = new LinkedHashMap<List<Trayecto>,Double>();
 		duraciones = new LinkedHashMap<List<Trayecto>,Integer>();
 		costos = new LinkedHashMap<List<Trayecto>,Double>();
@@ -371,7 +408,6 @@ public class PanelVerCombinaciones extends JPanel {
 		Estacion destino = (Estacion) lDestino.getSelectedItem();
 		
 		if(origen.getId() == -1 || destino.getId() == -1) {
-			//Tirar joption informativo 
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un origen y un destino ","Estaciones no seleccionadas", JOptionPane.INFORMATION_MESSAGE);
 			resetearCaminos();
 		}
@@ -479,4 +515,11 @@ public class PanelVerCombinaciones extends JPanel {
 		return seleccionado;
 	}
 	
+	public List<Estacion> getEstaciones(){
+		return estaciones;
+	}
+	
+	public List<Trayecto> getRutas(){
+		return rutas;
+	}
 }

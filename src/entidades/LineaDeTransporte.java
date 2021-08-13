@@ -1,5 +1,7 @@
 package entidades;
 
+import java.awt.Color;
+
 public class LineaDeTransporte {
 	
 	private Integer id;
@@ -101,6 +103,25 @@ public class LineaDeTransporte {
 	
 	public Boolean activa() {
 		return this.getEstado().equals(EstadoLineaDeTransporte.ACTIVA);
+	}
+	
+	public Color getColorGrafo() {
+		Color colorGrafo=new Color(0,0,0);
+		if(color.equals(ColorLinea.AMARILLA)) {
+			colorGrafo = Color.YELLOW;
+		} else if (color.equals(ColorLinea.AZUL)) {
+			colorGrafo = Color.BLUE;
+		} else if (color.equals(ColorLinea.NARANJA)) {
+			//colorGrafo = Color.ORANGE;
+			colorGrafo = new Color(255,128,0);
+		} else if (color.equals(ColorLinea.ROJA)) {
+			colorGrafo = Color.RED;
+		} else if (color.equals(ColorLinea.VERDE_CLARA)) {
+			colorGrafo = Color.green;
+		} else if (color.equals(ColorLinea.VERDE_OSCURA)) {
+			colorGrafo = new Color(45,87,44);
+		}
+		return colorGrafo;
 	}
 	
 }

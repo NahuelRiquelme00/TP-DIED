@@ -196,20 +196,5 @@ public class LineaDeTransporteDAOImpl implements LineaDeTransporteDAO{
 		}
 		return e;
 	}
-	
-//	public static void main(String[] args) throws DAOException {
-//		try {
-//			Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres", "ramonesb");
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		DAOManager manager = new DAOManagerImpl();
-//		//LineaDeTransporte nuevaLinea = new LineaDeTransporte("Linea 114",ColorLinea.AMARILLA,EstadoLineaDeTransporte.ACTIVA);
-//		//manager.getLineaDeTransporteDAO().crearEntidad(nuevaLinea);
-//		List<LineaDeTransporte> lineas = manager.getLineaDeTransporteDAO().obtenerTodasLasEntidades();
-//		for (LineaDeTransporte e : lineas) {
-//			System.out.println(e.toString());
-//		}
-//	}
 
 }
